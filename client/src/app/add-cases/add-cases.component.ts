@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import * as io from 'socket.io-client';
 import { Router } from '@angular/router';
 import { ApiService } from '../api.service';
 import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
@@ -14,46 +13,50 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-  selector: 'app-add-sales',
-  templateUrl: './add-sales.component.html',
-  styleUrls: ['./add-sales.component.scss']
+  selector: 'app-add-cases',
+  templateUrl: './add-cases.component.html',
+  styleUrls: ['./add-cases.component.scss']
 })
-export class AddSalesComponent implements OnInit {
+export class AddCasesComponent implements OnInit {
 
-  socket = io('http://localhost:4000');
-
-  salesForm: FormGroup;
-  itemId = '';
-  itemName = '';
-  itemPrice: number = null;
-  itemQty: number = null;
-  totalPrice: number = null;
+  casesForm: FormGroup;
+  name = '';
+  gender = '';
+  age: number = null;
+  address = '';
+  city = '';
+  country = '';
+  status = '';
+  statusList = ['Positive', 'Dead', 'Recovered'];
+  genderList = ['Male', 'Female'];
   isLoadingResults = false;
   matcher = new MyErrorStateMatcher();
 
   constructor(private router: Router, private api: ApiService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    this.salesForm = this.formBuilder.group({
-      itemId : [null, Validators.required],
-      itemName : [null, Validators.required],
-      itemPrice : [null, Validators.required],
-      itemQty : [null, Validators.required],
-      totalPrice : [null, Validators.required]
+    this.casesForm = this.formBuilder.group({
+      name : [null, Validators.required],
+      gender : [null, Validators.required],
+      age : [null, Validators.required],
+      address : [null, Validators.required],
+      city : [null, Validators.required],
+      country : [null, Validators.required],
+      status : [null, Validators.required]
     });
   }
 
   onFormSubmit() {
     this.isLoadingResults = true;
-    this.api.addSales(this.salesForm.value)
+    this.api.addCases(this.casesForm.value)
       .subscribe((res: any) => {
           const id = res._id;
           this.isLoadingResults = false;
-          this.socket.emit('updatedata', res);
-          this.router.navigate(['/sales-details', id]);
+          this.router.navigate(['/cases-details', id]);
         }, (err: any) => {
           console.log(err);
           this.isLoadingResults = false;
         });
   }
+
 }

@@ -1,33 +1,39 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { SalesComponent } from './sales/sales.component';
-import { SalesDetailsComponent } from './sales-details/sales-details.component';
-import { AddSalesComponent } from './add-sales/add-sales.component';
-import { EditSalesComponent } from './edit-sales/edit-sales.component';
+import { CasesComponent } from './cases/cases.component';
+import { CasesDetailsComponent } from './cases-details/cases-details.component';
+import { CasesStatComponent } from './cases-stat/cases-stat.component';
+import { AddCasesComponent } from './add-cases/add-cases.component';
+import { EditCasesComponent } from './edit-cases/edit-cases.component';
 
 const routes: Routes = [
   {
-    path: 'sales',
-    component: SalesComponent,
-    data: { title: 'List of Sales' }
+    path: 'cases',
+    component: CasesComponent,
+    data: { title: 'List of Cases' }
   },
   {
-    path: 'sales-details/:id',
-    component: SalesDetailsComponent,
-    data: { title: 'Sales Details' }
+    path: 'cases-details/:id',
+    component: CasesDetailsComponent,
+    data: { title: 'Cases Details' }
   },
   {
-    path: 'add-sales',
-    component: AddSalesComponent,
-    data: { title: 'Add Sales' }
+    path: 'cases-stat',
+    component: CasesStatComponent,
+    data: { title: 'Cases Statistic' }
   },
   {
-    path: 'edit-sales/:id',
-    component: EditSalesComponent,
-    data: { title: 'Edit Sales' }
+    path: 'add-cases',
+    component: AddCasesComponent,
+    data: { title: 'Add Cases' }
+  },
+  {
+    path: 'edit-cases/:id',
+    component: EditCasesComponent,
+    data: { title: 'Edit Cases' }
   },
   { path: '',
-    redirectTo: '/sales',
+    redirectTo: '/cases',
     pathMatch: 'full'
   }
 ];

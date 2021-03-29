@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import * as io from 'socket.io-client';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ApiService } from '../api.service';
 import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
@@ -14,58 +13,63 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-  selector: 'app-edit-sales',
-  templateUrl: './edit-sales.component.html',
-  styleUrls: ['./edit-sales.component.scss']
+  selector: 'app-edit-cases',
+  templateUrl: './edit-cases.component.html',
+  styleUrls: ['./edit-cases.component.scss']
 })
-export class EditSalesComponent implements OnInit {
+export class EditCasesComponent implements OnInit {
 
-  socket = io('http://localhost:4000');
-
-  salesForm: FormGroup;
+  casesForm: FormGroup;
   _id = '';
-  itemId = '';
-  itemName = '';
-  itemPrice: number = null;
-  itemQty: number = null;
-  totalPrice: number = null;
+  name = '';
+  gender = '';
+  age: number = null;
+  address = '';
+  city = '';
+  country = '';
+  status = '';
+  statusList = ['Positive', 'Dead', 'Recovered'];
+  genderList = ['Male', 'Female'];
   isLoadingResults = false;
   matcher = new MyErrorStateMatcher();
 
   constructor(private router: Router, private route: ActivatedRoute, private api: ApiService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
-    this.getSalesById(this.route.snapshot.params.id);
-    this.salesForm = this.formBuilder.group({
-      itemId : [null, Validators.required],
-      itemName : [null, Validators.required],
-      itemPrice : [null, Validators.required],
-      itemQty : [null, Validators.required],
-      totalPrice : [null, Validators.required]
+    this.getCasesById(this.route.snapshot.params.id);
+    this.casesForm = this.formBuilder.group({
+      name : [null, Validators.required],
+      gender : [null, Validators.required],
+      age : [null, Validators.required],
+      address : [null, Validators.required],
+      city : [null, Validators.required],
+      country : [null, Validators.required],
+      status : [null, Validators.required]
     });
   }
 
-  getSalesById(id: any) {
-    this.api.getSalesById(id).subscribe((data: any) => {
+  getCasesById(id: any) {
+    this.api.getCasesById(id).subscribe((data: any) => {
       this._id = data._id;
-      this.salesForm.setValue({
-        itemId: data.itemId,
-        itemName: data.itemName,
-        itemPrice: data.itemPrice,
-        itemQty: data.itemQty,
-        totalPrice: data.totalPrice
+      this.casesForm.setValue({
+        name: data.name,
+        gender: data.gender,
+        age: data.age,
+        address: data.address,
+        city: data.city,
+        country: data.country,
+        status: data.status
       });
     });
   }
 
   onFormSubmit() {
     this.isLoadingResults = true;
-    this.api.updateSales(this._id, this.salesForm.value)
+    this.api.updateCases(this._id, this.casesForm.value)
       .subscribe((res: any) => {
           const id = res._id;
           this.isLoadingResults = false;
-          this.socket.emit('updatedata', res);
-          this.router.navigate(['/sales-details', id]);
+          this.router.navigate(['/cases-details', id]);
         }, (err: any) => {
           console.log(err);
           this.isLoadingResults = false;
@@ -73,8 +77,8 @@ export class EditSalesComponent implements OnInit {
       );
   }
 
-  salesDetails() {
-    this.router.navigate(['/sales-details', this._id]);
+  casesDetails() {
+    this.router.navigate(['/cases-details', this._id]);
   }
 
 }

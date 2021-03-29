@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { catchError, tap, map } from 'rxjs/operators';
-import { Sales } from './sales';
-import { Chart } from './chart';
+import { Cases } from './cases';
+import { Statistic } from './statistic';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -19,55 +19,59 @@ export class ApiService {
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      console.error(error);
+
+      // TODO: send the error to remote logging infrastructure
+      console.error(error); // log to console instead
+
+      // Let the app keep running by returning an empty result.
       return of(result as T);
     };
   }
 
-  getSales(): Observable<Sales[]> {
-    return this.http.get<Sales[]>(`${apiUrl}`)
+  getCases(): Observable<Cases[]> {
+    return this.http.get<Cases[]>(`${apiUrl}`)
       .pipe(
-        tap(sales => console.log('fetched sales')),
-        catchError(this.handleError('getSales', []))
+        tap(cases => console.log('fetched cases')),
+        catchError(this.handleError('getCases', []))
       );
   }
 
-  getSalesById(id: string): Observable<Sales> {
+  getCasesById(id: string): Observable<Cases> {
     const url = `${apiUrl}/${id}`;
-    return this.http.get<Sales>(url).pipe(
-      tap(_ => console.log(`fetched sales id=${id}`)),
-      catchError(this.handleError<Sales>(`getSalesById id=${id}`))
+    return this.http.get<Cases>(url).pipe(
+      tap(_ => console.log(`fetched cases id=${id}`)),
+      catchError(this.handleError<Cases>(`getCasesById id=${id}`))
     );
   }
 
-  addSales(sales: Sales): Observable<Sales> {
-    return this.http.post<Sales>(apiUrl, sales, httpOptions).pipe(
-      tap((s: Sales) => console.log(`added sales w/ id=${s._id}`)),
-      catchError(this.handleError<Sales>('addSales'))
+  addCases(cases: Cases): Observable<Cases> {
+    return this.http.post<Cases>(apiUrl, cases, httpOptions).pipe(
+      tap((c: Cases) => console.log(`added product w/ id=${c._id}`)),
+      catchError(this.handleError<Cases>('addCases'))
     );
   }
 
-  updateSales(id: string, sales: Sales): Observable<any> {
+  updateCases(id: string, cases: Cases): Observable<any> {
     const url = `${apiUrl}/${id}`;
-    return this.http.put(url, sales, httpOptions).pipe(
-      tap(_ => console.log(`updated sales id=${id}`)),
-      catchError(this.handleError<any>('updateSales'))
+    return this.http.put(url, cases, httpOptions).pipe(
+      tap(_ => console.log(`updated cases id=${id}`)),
+      catchError(this.handleError<any>('updateCases'))
     );
   }
 
-  deleteSales(id: string): Observable<Sales> {
+  deleteCases(id: string): Observable<Cases> {
     const url = `${apiUrl}/${id}`;
-    return this.http.delete<Sales>(url, httpOptions).pipe(
-      tap(_ => console.log(`deleted sales id=${id}`)),
-      catchError(this.handleError<Sales>('deleteSales'))
+    return this.http.delete<Cases>(url, httpOptions).pipe(
+      tap(_ => console.log(`deleted cases id=${id}`)),
+      catchError(this.handleError<Cases>('deleteCases'))
     );
   }
 
-  getChart(): Observable<Chart> {
-    const url = `${apiUrl}/itemsales`;
-    return this.http.get<Chart>(url).pipe(
-      tap(_ => console.log(`fetched chart data`)),
-      catchError(this.handleError<Chart>(`getChart data`))
+  getStatistic(status: string): Observable<Statistic> {
+    const url = `${apiUrl}/daily/${status}`;
+    return this.http.get<Statistic>(url).pipe(
+      tap(_ => console.log(`fetched statistic status=${status}`)),
+      catchError(this.handleError<Statistic>(`getStatistic status=${status}`))
     );
   }
 }

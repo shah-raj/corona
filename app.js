@@ -5,7 +5,7 @@ var logger = require('morgan');
 var mongoose = require('mongoose');
 var cors = require('cors');
 
-mongoose.connect('mongodb://localhost/sales-report', {
+mongoose.connect('mongodb://localhost/covid-dashboard', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true
@@ -13,8 +13,7 @@ mongoose.connect('mongodb://localhost/sales-report', {
   .catch((err) => console.error(err));
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var salesRouter = require('./routes/sales');
+var casesRouter = require('./routes/cases');
 
 var app = express();
 
@@ -26,8 +25,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/api', salesRouter);
+app.use('/api', casesRouter);
 
 module.exports = app;
 
