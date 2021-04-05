@@ -32,3 +32,7 @@ module.exports = app;
 app.listen(3000, () => {
     console.log('Express server started at port : 3000');
 });
+
+app.get('*', (req, res) => {
+  res.json({'message':'Error 404 page does not exist'});
+});
